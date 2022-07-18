@@ -1,0 +1,54 @@
+[tasks.ureq-tests]
+command = "cargo"
+args = ["test", "--quiet", "--features=ureq"]
+
+[tasks.reqwest-tests]
+command = "cargo"
+args = ["test", "--quiet", "--features=reqwest"]
+
+[tasks.test]
+clear = true
+run_task = [
+    { name = ["ureq-tests", "reqwest-tests"] }
+]
+
+
+[tasks.ureq-clippy]
+command = "cargo"
+args = ["clippy", "--quiet", "--features=ureq"]
+
+[tasks.reqwest-clippy]
+command = "cargo"
+args = ["clippy", "--quiet", "--features=reqwest"]
+
+[tasks.clippy]
+clear = true
+run_task = [ 
+    { name = ["ureq-clippy", "reqwest-clippy"] }
+]
+
+
+[tasks.check-format]
+command = "cargo"
+args = ["fmt", "--check"]
+
+
+[tasks.ensure-no-defaults]
+command = "grep"
+args = ["-qP", "default = \\[\\]", "Cargo.toml"]
+
+
+[tasks.check]
+clear = true
+run_task = [
+    { name = ["check-format", "ensure-no-defaults", "clippy", "test"] },
+]
+
+
+[tasks.publish]
+clear = true
+dependencies = [
+    "check"
+]
+command = "cargo"
+args = ["publish"]

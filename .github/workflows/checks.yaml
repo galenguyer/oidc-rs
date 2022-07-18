@@ -1,0 +1,32 @@
+name: Code quality checks
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  shared:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Ensure no default features are set
+      run: grep -qP 'default = \[\]' Cargo.toml
+    - name: Ensure formatting is correct
+      run: cargo fmt --check
+
+  features:
+    strategy:
+      matrix: 
+        feature: ["ureq", "reqwest"]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run clippy with feature ${{ matrix.feature }}
+      run: cargo clippy --features=${{ matrix.feature }}
+    - name: Run tests with feature ${{ matrix.feature }}
+      run: cargo test --features=${{ matrix.feature }}
