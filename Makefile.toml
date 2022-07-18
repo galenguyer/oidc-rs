@@ -23,7 +23,7 @@ args = ["clippy", "--quiet", "--features=reqwest"]
 
 [tasks.clippy]
 clear = true
-run_task = [ 
+run_task = [
     { name = ["ureq-clippy", "reqwest-clippy"] }
 ]
 
@@ -51,4 +51,4 @@ dependencies = [
     "check"
 ]
 command = "cargo"
-args = ["publish"]
+args = ["publish", "--features=ureq"]

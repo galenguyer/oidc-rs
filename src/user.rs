@@ -10,7 +10,9 @@ pub struct OIDCUser {
     pub preferred_username: String,
     /// Any groups the user is in
     pub groups: Box<[String]>,
-    // TODO: A variable list of any other attributes we're given
+    /// The base object we're given by OIDC
+    #[serde(skip)]
+    pub base: serde_json::Value,
 }
 
 impl OIDCUser {
@@ -28,6 +30,7 @@ mod tests {
             name: Some(String::from("Testy McTestyFace")),
             preferred_username: String::from("test"),
             groups: Box::new([String::from("member")]),
+            base: serde_json::json!({}),
         };
         assert_eq!(user.has_group("member"), true);
     }
@@ -38,6 +41,7 @@ mod tests {
             name: Some(String::from("Testy McTestyFace")),
             preferred_username: String::from("test"),
             groups: Box::new([]),
+            base: serde_json::json!({}),
         };
         assert_eq!(user.has_group("missing"), false);
     }

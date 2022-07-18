@@ -2,7 +2,7 @@
 name = "oidc-rs"
 authors = ["Galen Guyer <galen@galenguyer.com"]
 description = "A generic OIDC client"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 license = "MIT"
 repository = "https://github.com/galenguyer/oidc-rs"
@@ -12,6 +12,7 @@ repository = "https://github.com/galenguyer/oidc-rs"
 itertools = "0.10.3"
 serde = { version = "1.0.139", features = ["derive"] }
 cfg-if = "1.0.0"
+serde_json = "1.0.82"
 
 [dependencies.reqwest]
 version = "0.11.11"

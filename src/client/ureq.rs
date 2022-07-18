@@ -43,8 +43,14 @@ impl OIDCClient {
         match res {
             Ok(response) => {
                 if response.status() >= 200 && response.status() <= 300 {
-                    match response.into_json::<OIDCUser>() {
-                        Ok(user) => Ok(user),
+                    match response.into_json::<serde_json::Value>() {
+                        Ok(value) => match serde_json::from_value::<OIDCUser>(value.clone()) {
+                            Ok(user) => Ok(OIDCUser {
+                                base: value,
+                                ..user
+                            }),
+                            Err(_e) => Err(OIDCError::Unknown),
+                        },
                         // TODO: need a better error here... but ureq and reqwest do different types
                         Err(_e) => Err(OIDCError::Unknown),
                     }

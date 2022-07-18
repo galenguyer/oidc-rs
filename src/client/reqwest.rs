@@ -44,8 +44,14 @@ impl OIDCClient {
         match res {
             Ok(response) => {
                 if response.status().is_success() {
-                    match response.json::<OIDCUser>().await {
-                        Ok(user) => Ok(user),
+                    match response.json::<serde_json::Value>().await {
+                        Ok(value) => match serde_json::from_value::<OIDCUser>(value.clone()) {
+                            Ok(user) => Ok(OIDCUser {
+                                base: value,
+                                ..user
+                            }),
+                            Err(_e) => Err(OIDCError::Unknown),
+                        },
                         Err(e) => Err(OIDCError::ReqwestError(Box::new(e))),
                     }
                 } else if response.status().is_client_error() {
